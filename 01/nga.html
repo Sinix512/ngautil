@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>恩基爱赞踩查询</title>
+</head>
+<script type="text/javascript">
+let xmlhttp;
+function getRes(url)
+{
+	xmlhttp=null;
+	if (window.XMLHttpRequest)
+	{// code for all new browsers
+		xmlhttp=new XMLHttpRequest();
+	}
+	else if (window.ActiveXObject)
+	{// code for IE5 and IE6
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	if (xmlhttp!==null)
+	{
+		xmlhttp.onreadystatechange=state_Change;
+		xmlhttp.open("GET",url,true);
+		xmlhttp.send(null);
+	}
+	else
+	{
+		alert("Your browser does not support XMLHTTP.");
+	}
+}
+
+function state_Change()
+{
+	if (xmlhttp.readyState===4)
+	{// 4 = "loaded"
+		if (xmlhttp.status===200)
+		{// 200 = OK
+		// ...our code here...
+			var rt = xmlhttp.responseText;
+			var res = eval("("+rt+")");
+			let text = '';
+			if(typeof(res.tid) !== 'undefined') {
+                text += "赞" + res.tid.good + "<br>";
+                text += "踩" + res.tid.bad + "<br>";
+            }
+            if(typeof(res.pid) !== 'undefined') {
+                text += "赞" + res.pid.good + "<br>";
+                text += "踩" + res.pid.bad + "<br>";
+            }
+			document.getElementById("result").innerHTML = text;
+		}
+		else
+		{
+			alert("Problem retrieving XML data");
+		}
+	}
+}
+
+function getTid() {
+	return document.getElementById("tid").value;
+}
+
+function getPid() {
+    return document.getElementById("pid").value;
+}
+</script>
+<body>
+	<label for="tid">tid</label><input type="text" id="tid"/><button onclick="document.getElementById('result').innerHTML = '';getRes('nga.php?tid='+getTid());">查询</button><br>
+	<label for="pid">pid</label><input type="text" id="pid"/><button onclick="document.getElementById('result').innerHTML = '';getRes('nga.php?pid='+getPid());">查询</button><br>
+	<div id="result"></div>
+</body>
+</html>
